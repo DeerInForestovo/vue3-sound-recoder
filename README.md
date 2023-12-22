@@ -1,7 +1,7 @@
-# Vue 3 + Vite
+# Vue3 web sound recorder
 
-This template should help get you started developing with Vue 3 in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
+为中文信息处理课第二次作业开发的一个小前端程序
 
-## Recommended IDE Setup
+参考的这个代码居然还带了个模拟波的图，还挺帅的
 
-- [VS Code](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur) + [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin).
+reference: [vue3实现H5网页录音并上传（mp3、wav）兼容Android、iOS和PC端](https://juejin.cn/post/7243240618788012090)
