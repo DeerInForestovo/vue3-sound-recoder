@@ -68,11 +68,11 @@ export default {
       });
     },
 
-    upload() { // upload to server
+    upload(f) { // upload to server
       let blob = this.recBlob
       let fileName = "voice.wav"
-      let vawFile = new File([blob], fileName)
-      AxiosFunctions.methods.update(vawFile, 0, sampleRate)
+      let wavFile = new File([blob], fileName)
+      AxiosFunctions.methods.update(wavFile, f, sampleRate)
           .then((response) => {
             console.log(response)
             this.result = response.data
@@ -90,6 +90,7 @@ export default {
             console.log(response)
           })
 
+      // 将原始录音文件下载到本地
       // let downLoadUrl = window.URL.createObjectURL(
       //     new Blob([blob])
       // );
@@ -131,7 +132,21 @@ export default {
 
     resultPlay() {
       if (this.result) {
-        this.play(this.result)
+        let blob = new Blob([this.result], {type: 'audio/wav'})
+        console.log(blob)
+        this.play(blob)
+
+        // 将结果下载到本地
+        // let fileName = 'result.wav'
+        // let url = window.URL.createObjectURL(blob)
+        // let link = document.createElement('a')
+        // link.style.display = 'none'
+        // link.href = url
+        // link.setAttribute('download', fileName)
+        // document.body.appendChild(link)
+        // link.click()
+        // window.URL.revokeObjectURL(link.href);
+        // document.body.removeChild(link)
       } else {
         ElNotification({
           title: "Failed",
@@ -184,12 +199,15 @@ export default {
         </el-space>
       </div>
       <div class="items">
-        <div style="height:100px; width:300px;" ref="recwave"></div>
+        <div style="height:200px; width:600px;" ref="recwave"></div>
       </div>
       <div class="items">
         <el-space>
           <el-button @click="recPlay" type="info"> 本地试听 </el-button>
-          <el-button @click="upload" type="primary"> 开始变声 </el-button>
+          <el-button-group>
+            <el-button @click="upload(1)" type="primary"> 开始变声 f1 = 1 </el-button>
+            <el-button @click="upload(0)" type="primary"> 开始变声 f1 = 0 </el-button>
+          </el-button-group>
           <el-button @click="resultPlay" type="success"> 变声结果 </el-button>
         </el-space>
       </div>

@@ -11,6 +11,7 @@ export default {
             formData.append('sampleRate', sampleRate)
             formData.append('sSpeakId', 'alice')
             return axios.post(base_api + '/voice', formData, {
+                responseType: 'blob',
                 params: {
                     f0: f
                 }
