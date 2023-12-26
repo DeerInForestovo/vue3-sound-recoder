@@ -7,6 +7,10 @@ import 'recorder-core/src/engine/wav'
 import 'recorder-core/src/extensions/waveview'
 import {ElNotification} from "element-plus";
 import {ref} from "vue";
+import AxiosFunctions from '../src/utils/api.js'
+
+const bitRate = 16
+const sampleRate = 44100
 
 export default {
   data() {
@@ -24,8 +28,8 @@ export default {
     recOpen() {
       this.rec = Recorder({
         type: "wav",
-        sampleRate: 44100,
-        bitRate: 16,
+        sampleRate: sampleRate,
+        bitRate: bitRate,
         onProcess: (buffers, powerLevel, bufferDuration, bufferSampleRate, newBufferIdx, asyncEnd) => {
           if (this.wave) this.wave.input(buffers[buffers.length - 1], powerLevel, bufferSampleRate)
         }
@@ -60,13 +64,42 @@ export default {
       this.rec.stop((blob, duration) => {
         this.recBlob = blob
         this.soundLength = duration
-        this.upload(blob);
       }, (err) => {
       });
     },
 
-    upload(blob) { // upload to server
+    upload() { // upload to server
+      let blob = this.recBlob
+      let fileName = "voice.wav"
+      let vawFile = new File([blob], fileName)
+      AxiosFunctions.methods.update(vawFile, 0, sampleRate)
+          .then((response) => {
+            console.log(response)
+            this.result = response.data
+            ElNotification({
+              title: "Success",
+              message: "完成",
+              type: "success"
+            })
+          }).catch((response) => {
+            ElNotification({
+              title: "Failed",
+              message: "网络错误",
+              type: "error"
+            })
+            console.log(response)
+          })
 
+      // let downLoadUrl = window.URL.createObjectURL(
+      //     new Blob([blob])
+      // );
+      // let a = document.createElement("a");
+      // a.download = fileName;
+      // a.href = downLoadUrl;
+      // a.style.display = "none";
+      // document.body.appendChild(a);
+      // a.click();
+      // a.remove();
     },
 
     play(sound) {
@@ -164,7 +197,7 @@ export default {
         <el-text> {{this.soundLength ? '录音时长：' + this.soundLength / 1000 + ' s' : ''}} </el-text>
       </div>
       <div class="items">
-        <el-progress :percentage="this.playedPercentage"/>
+        <progress :value="this.playedPercentage" :max="100"/>
       </div>
     </div>
   </div>
